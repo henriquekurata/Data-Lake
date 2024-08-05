@@ -625,9 +625,7 @@ while True:
 
 **********Projeto 1 - Construindo Data Lake S3 com AWS Lake Formation e Análise Via SQL com Athena**********
 - Ferramentas:
-AWS S3, Lake Formation, Glue, Athena, SQL
-
-- Passos:
+AWS S3, Lake Formation, Glue, Athena.
 
 - Comandos:
 - Acessar IAM e criar usuário e grupo;
@@ -645,7 +643,7 @@ AWS S3, Lake Formation, Glue, Athena, SQL
 
 
 
-
+**********Projeto 2 - Configurando o controle de acesso em nível de linha no DL através do Lake Formation**********
 
 
 
