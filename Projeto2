@@ -1,12 +1,13 @@
 **********CONSTRUINDO DATA LAKE ON-PREMISSES COM DOCKER**********
 
-- Ferramentas: Docker, Hadoop, JDK
+- Ferramentas: Docker, Hadoop, JDK.
 
 - Passos:
-1- Download Hadoop e JDK;
+1- Download do Hadoop e JDK;
 2- Exceutar o arquivo de imagem dockerfile;
 3- Criar container;
-4- Fazer ajustes no conainer.
+4- Fazer ajustes no conainer;
+5- Inicializar o namenode e os datanodes.
 
 - Comandos:
 # Preparação do NameNode
@@ -14,7 +15,6 @@
 Download direto na documentação do hadoop e java.
 
 2- Abra o terminal ou prompt de comando, navegue até a pasta do NameNode e execute a instrução abaixo para criar a imagem:
-
 docker build . -t namenode:dsa
 
 DOCKERFILE:
@@ -131,8 +131,7 @@ Obs: Para mais informações sobre os arquivos de configurações do hadoop, bas
 
 
 # Preparação dos DataNodes
-
-1- Faça o download do Apache Hadoop e do JDK 8, coloque na pasta "binarios", descompacte os arquivos e renomeie as pastas. O procedimento é o mesmo usado no capítulo anterior.
+1- Faça o download do Apache Hadoop e do JDK 8, coloque na pasta "binarios", descompacte os arquivos e renomeie as pastas. O procedimento é o mesmo do namenode.
 
 2- Abra o terminal ou prompt de comando, navegue até a pasta do DataNode e execute a instrução abaixo para criar a imagem:
 docker build . -t datanode:dsa
@@ -259,8 +258,9 @@ Obs: Para inicializar o datanode é necessário limpar a pasta /home/hduser/hdfs
 - Ferramentas: Kafta (Confluent)
 
 - Passos:
-1- Executar docker-compose extraído do git;
-2-
+1- Acessar a pasta e executar o docker-compose extraído do git direto no terminal da máquina local (Docker-compose up -d);
+2- Com os containers criados, basta acessar localhost:9021 (Control Center)
+3- Criar Topics, connector e acessar o Ksqldb.
 
 - Comandos:
 docker-compose para criação de imagens e container docker do Kafka:
@@ -444,8 +444,7 @@ services:
 
 
 #Dentro do Kafka: localhost:9021
-Criar os topics e os connects (name /* kafka.topic / quickstart (igual ao name))
-
+Criar os topics e os connects (datagen connectos > name > kafka.topic (tópico) / quickstart (igual ao name))
 
 #Agora é acessar o menu KsqlDB para execução de query SQL:
 # Cria um stream (objeto imutável) para um dos tópicos
@@ -499,7 +498,7 @@ SELECT * FROM pageviews_per_region_89 EMIT CHANGES;
 Docker, kafka, python.
 
 - Passos:
-1-Criar container zookeeper, brocker;
+1-Criar container zookeeper e brocker;
 2-Criar tópico e Streams para producer e consumer;
 3-Acessar terminal externo do container broker e verificar a integração da camada de mensagens.
 
@@ -547,7 +546,7 @@ cd /usr/bin
 - Passos:
 1-Criar container cliente;
 2-Criar arquivos para producer e consumer;
-3-Acessar terminal externo do container cliente e verificar a integração da camada de mensagens.
+3-Acessar terminal externo do container cliente e verificar a integração da camada de mensagens (Python procuder.py / python consumer.py)
 
 #Parte 2
 #Produzindo e Consumindo Stream de Dados do Cluster Kafka com Linguagem Python
@@ -619,31 +618,30 @@ while True:
         print('Mensagem recebida: {}'.format(msg.value().decode('utf-8')))
 
 
+#Inicializar a leitura dos arquivos de producer e consumer em terminais diferentes (Comandos: python producer.py e python consumer.py)
 
 
 
-
-**********Projeto 1 - Construindo Data Lake S3 com AWS Lake Formation e Análise Via SQL com Athena**********
+**********Projeto 1 - Construindo Data Lake S3 com AWS Lake Formation e Análise de dados Via SQL com Athena**********
 - Ferramentas:
 AWS S3, Lake Formation, Glue, Athena.
 
 - Comandos:
-- Acessar IAM e criar usuário e grupo;
--Adicionar o usuário ao grupo criado;
--Deslogar da AWS e acessar o endereço https://010928218238.signin.aws.amazon.com/console do usuário criado (Cria-se usuário para usar o Root);
--Preparar a fonte de dados (Bucket S3) com o arquivo bing_covid-19_data.parquet;
--Definir o adminstrador do Data Lake no console do Aws Lake Formation (Administrative roles and tasks / Data lake administrators = 	dsadlp1 / Database creators = IAMAllowedPrincipals)
--Apontar a fonte de dados (S3) para o Lake Formation (Data lake locations);
--Acessar Data locations para inferir qual usuário terá privilégio de acesso ao bucket s3
--Acessar Databases e criar o banco de dados com o arquivo do S3;
--Acessar o Crawlers e criar a tabela;
--Acessar Data Catalog > Tables no Aws Lake Formation > Actions > View Data (Vai abrir o Amazon Athena) para consultas SQL
--Criar no S3 um novo Bucket para a saída dos dados (p1-dsa-dl-saida > saida);
--Acessar novamente o Athena e configurar a saida de dados com a execução da Query da tabela.
+1- Acessar IAM e criar usuário e grupo;
+2- Adicionar o usuário ao grupo criado;
+3- Deslogar da AWS e acessar o endereço https://010928218238.signin.aws.amazon.com/console do usuário criado (Cria-se outro usuário para evitar o uso do Root);
+4- Preparar a fonte de dados (Bucket S3) com o arquivo bing_covid-19_data.parquet;
+5- Definir o adminstrador do Data Lake no console do Aws Lake Formation (Administrative roles and tasks / Data lake administrators = dsadlp1 / Database creators = IAMAllowedPrincipals);
+6- Apontar a fonte de dados (S3) para o Lake Formation (Data lake locations);
+7- Acessar Data locations para inferir qual usuário terá privilégio de acesso ao bucket s3;
+8- Acessar Databases e criar o banco de dados com o arquivo do S3;
+9- Acessar o Crawlers e criar a tabela;
+10- Acessar Data Catalog > Tables no Aws Lake Formation > Actions > View Data (Vai abrir o Amazon Athena) para consultas SQL;
+11- Criar no S3 um novo Bucket para a saída dos dados (p1-dsa-dl-saida > saída);
+12- Acessar novamente o Athena e configurar a saída de dados com a execução de Querys da tabela.
 
 
-
-**********Projeto 2 - Configurando o controle de acesso em nível de linha no DL através do Lake Formation**********
+**********Projeto 2 - Engenharia de Dados com PySpark e AWS EMR**********
 
 - Ferramentas:
 AWS S3, EMR, Spark.
@@ -651,10 +649,10 @@ AWS S3, EMR, Spark.
 - Passos:
 1- Criar bucket S3 com pasta para "dados" e "jobs"
 2- Carregar os dados e o script Pyspark nas pastas organizadas;
-3- Criar Cluster no menu do EMR (Aplicativos - Spark , configuração cluster, VPC - usar o automático, encerramento do cluster, Logs de cluster - Adicionar o bucket criado para gravação, Configuração de segurança e par de chaves do EC2 - Criar par de chaves tipo RSA e .ppk para Windows para liberar o acesso via máquina local, Perfis do Identity and Access Management (IAM) para conversação entre serviços AWS- Criar automaticamente, Perfil de instância do EC2 para o Amazon EMR para liberar o acesso de leitura e escrita da instancia ao bucket S3- Criar automaticamente;
-4- Ajustar no menu do cluster EMR o "EC2 security groups (firewall)": Primary node > inbound role > add rule > SSH > 0.0.0.0./0 > para o terminal da máquina local conseguir acessar o cluster na nuvem AWS;
+3- Criar Cluster no menu do EMR (Aplicativos - Spark , configuração cluster, VPC - usar o automático, encerramento do cluster, Logs de cluster - Adicionar o bucket criado para gravação no item anterior, Configuração de segurança e par de chaves do EC2 - Criar par de chaves tipo RSA e .ppk para Windows para liberar o acesso via máquina local, Perfis do Identity and Access Management (IAM) para conversação entre serviços AWS- Criar automaticamente, Perfil de instância do EC2 para o Amazon EMR para liberar o acesso de leitura e escrita da instancia ao bucket S3- Criar automaticamente);
+4- Ajustar no menu do cluster EMR "EC2 security groups (firewall)": Primary node > inbound role > add rule > SSH > 0.0.0.0./0 > para o terminal da máquina local conseguir acessar o cluster na nuvem AWS;
 5- Acessar o cluster EMR via linha de comando: Para Windows basta fazer a conexão com o putty.exe
-6- Com a conexão relizada, basta acessar a aba "steps" do cluster criado e adicionar um Spark application > Cluster mode > Application location (job.py) bucket S3 > Argumentos (adicionar a URI: --data_source s3://p3-dsa-dl-hk/dados/dataset.csv e --output_uri s3://p3-dsa-dl-hk/saida) em linhas separadas); 
+6- Com a conexão relizada, basta acessar a aba "steps" do cluster criado e adicionar um Spark application > Cluster mode > Application location (job.py) bucket S3 > Argumentos (adicionar a URI: --data_source s3://p3-dsa-dl-hk/dados/dataset.csv e --output_uri s3://p3-dsa-dl-hk/saida) em linhas separadas, pois no script Spark há argumentos na função def); 
 7- Processamento de dados com PySpark será realizado após configurações do "steps".
 
 - Comandos:
